@@ -15,12 +15,25 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *);
+    void keyPressEvent(QKeyEvent *);
+    void timerEvent(QTimerEvent *);
+    void go();
+    void tailDrop();
+    int egg();
+    void test();
 
 private:
     Ui::MainWindow *ui;
-
     int nodes[1609];
     QList<int> snake;
+    int state = 1;
+    int step = 0;
+    int score = 0;
+    int direction = 4;
+    int interval = 200;
+    int eating = 0;
+    bool eggExist = false;
+
 };
 #endif // MAINWINDOW_H
