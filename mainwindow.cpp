@@ -22,8 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->resize(1550, 1250);
+    connect(timer, SIGNAL(timeout()), this, SLOT(timeToGo()));
+    timer->start(200);
     init();
-    startTimer(interval);
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
     setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
@@ -48,10 +49,12 @@ void MainWindow::init() {
     step = 0;
     score = 0;
     direction = 4;
-    interval = 150;
+    interval = 200;
     eating = 0;
     eggExist = false;
     mouseLocation = 0;
+    timer->setInterval(interval);
+    ui->speed->setValue(101 - interval / 7);
     ui->step->setText(QString::number(step));
     ui->score->setText(QString::number(score));
     for (int i = 0; i <= 1763; i++) {
@@ -150,7 +153,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
     mouseLocation = 0;
 }
 
-void MainWindow::timerEvent(QTimerEvent *event) {
+void MainWindow::timeToGo() {
     if (state == 1) {
         ui->step->setText(QString::number(++step));
         go();
@@ -170,6 +173,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
         ui->actionPause->setEnabled(true);
         ui->actionSave->setEnabled(false);
         ui->actionLoad->setEnabled(false);
+        ui->speed->setEnabled(false);
     } else if (state == 0) {
         ui->Start->setEnabled(true);
         ui->Reset->setEnabled(false);
@@ -181,6 +185,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
         ui->actionPause->setEnabled(false);
         ui->actionSave->setEnabled(false);
         ui->actionLoad->setEnabled(true);
+        ui->speed->setEnabled(true);
     } else if (state == 2) {
         ui->Start->setEnabled(true);
         ui->Reset->setEnabled(true);
@@ -192,6 +197,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
         ui->actionPause->setEnabled(false);
         ui->actionSave->setEnabled(true);
         ui->actionLoad->setEnabled(false);
+        ui->speed->setEnabled(true);
     } else if (state == 3) {
         ui->Start->setEnabled(false);
         ui->Reset->setEnabled(true);
@@ -203,6 +209,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
         ui->actionPause->setEnabled(true);
         ui->actionSave->setEnabled(false);
         ui->actionLoad->setEnabled(false);
+        ui->speed->setEnabled(false);
     }
 }
 
@@ -351,6 +358,8 @@ void MainWindow::load() {
             for (int i = 0; i < l; i++) {
                 snake.push_back(jarrSnake.at(i).toInt());
             }
+            timer->setInterval(interval);
+            ui->speed->setValue(101 - interval / 7);
             ui->score->setText(QString::number(score));
             ui->step->setText(QString::number(step));
         }
@@ -417,4 +426,11 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::on_actionLoad_triggered()
 {
     load();
+}
+
+void MainWindow::on_speed_valueChanged(int value)
+{
+    interval = (101 - value) * 7;
+    //qDebug() << interval;
+    timer->setInterval(interval);
 }

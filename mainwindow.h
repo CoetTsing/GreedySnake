@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QList>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,7 +19,6 @@ public:
     void init();
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
-    void timerEvent(QTimerEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent(QMouseEvent *);
     void go();
@@ -52,6 +52,10 @@ private slots:
 
     void on_actionLoad_triggered();
 
+    void on_speed_valueChanged(int value);
+
+    void timeToGo();
+
 private:
     Ui::MainWindow *ui;
     int nodes[1764];
@@ -64,6 +68,7 @@ private:
     int eating;
     bool eggExist;
     int mouseLocation = 0;
+    QTimer *timer = new QTimer(this);
 
 };
 #endif // MAINWINDOW_H
