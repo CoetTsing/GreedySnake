@@ -15,25 +15,33 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void init();
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
     void timerEvent(QTimerEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *);
     void go();
     void tailDrop();
     int egg();
-    void test();
+
+private slots:
+    void on_Start_clicked();
+
+    void on_Reset_clicked();
 
 private:
     Ui::MainWindow *ui;
-    int nodes[1609];
+    int nodes[1764];
     QList<int> snake;
-    int state = 1;
-    int step = 0;
-    int score = 0;
-    int direction = 4;
-    int interval = 200;
-    int eating = 0;
-    bool eggExist = false;
+    int state;
+    int step;
+    int score;
+    int direction;
+    int interval;
+    int eating;
+    bool eggExist;
+    int mouseLocation = 0;
 
 };
 #endif // MAINWINDOW_H
