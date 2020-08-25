@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->resize(1550, 1250);
     connect(timer, SIGNAL(timeout()), this, SLOT(timeToGo()));
-    timer->start(200);
+    timer->start();
     init();
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
     setMouseTracking(true);
@@ -431,6 +431,5 @@ void MainWindow::on_actionLoad_triggered()
 void MainWindow::on_speed_valueChanged(int value)
 {
     interval = (101 - value) * 7;
-    //qDebug() << interval;
     timer->setInterval(interval);
 }
