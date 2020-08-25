@@ -5,6 +5,8 @@
 #include <QTime>
 #include <QtGlobal>
 #include <QKeyEvent>
+#include <QMessageBox>
+#include <QToolBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +19,15 @@ MainWindow::MainWindow(QWidget *parent)
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
     setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
+    QToolBar *toolBar = new QToolBar(this);
+    addToolBar(Qt::BottomToolBarArea, toolBar);
+    toolBar->setMovable(false);
+    toolBar->addAction(ui->actionStart);
+    toolBar->addAction(ui->actionReset);
+    toolBar->addAction(ui->actionPause);
+    toolBar->addAction(ui->actionSave);
+    toolBar->addAction(ui->actionLoad);
+    toolBar->addAction(ui->actionExit);
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +44,8 @@ void MainWindow::init() {
     eating = 0;
     eggExist = false;
     mouseLocation = 0;
+    ui->step->setText(QString::number(step));
+    ui->score->setText(QString::number(score));
     for (int i = 0; i <= 1763; i++) {
         if ((i <= 41) || (i >= 1722 && i <= 1763) || (i % 42 == 0) || (i % 42 == 41))
             nodes[i] = 3;
@@ -82,6 +95,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
         painter.setBrush(brush);
         painter.drawRect(QRect(100 + 25 * (mouseLocation % 42), 100 + 25 * (mouseLocation / 42), 25, 25));
     }
+    mouseLocation = 0;
 }
 
 void MainWindow::timerEvent(QTimerEvent *event) {
@@ -130,7 +144,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         int y = event->y();
         if (x > 125 && x < 1125 && y > 125 && y <1125) {
             mouseLocation = (x - 125) / 25 + 42 * ((y - 125) / 25 + 1) + 1;
-            nodes[mouseLocation] = 3;
+            if (nodes[mouseLocation] == 0)
+                nodes[mouseLocation] = 3;
+            else if (nodes[mouseLocation])
+                nodes[mouseLocation] = 0;
             update();
         }
     }
@@ -149,9 +166,13 @@ void MainWindow::go() {
     if (nodes[*(snake.begin())] == 2) {
         eating = 3;
         eggExist = false;
+        score += 5;
+        ui->score->setText(QString::number(score));
     }
-    if (nodes[*(snake.begin())] == 1 || nodes[*(snake.begin())] == 3)
+    if (nodes[*(snake.begin())] == 1 || nodes[*(snake.begin())] == 3) {
         state = 3;
+        QMessageBox::information(this, "GameOver", "Game Over!");
+    }
     for (auto x: snake)
         nodes[x] = 1;
     nodes[*snake.begin()] = 4;
@@ -173,6 +194,14 @@ int MainWindow::egg() {
         return egg();
 }
 
+void MainWindow::save() {
+
+}
+
+void MainWindow::load() {
+
+}
+
 void MainWindow::on_Start_clicked()
 {
     state = 1;
@@ -182,4 +211,55 @@ void MainWindow::on_Reset_clicked()
 {
     init();
     update();
+}
+
+void MainWindow::on_Pause_clicked()
+{
+    state = 2;
+}
+
+void MainWindow::on_Exit_clicked()
+{
+    this->close();
+}
+
+void MainWindow::on_actionStart_triggered()
+{
+    state = 1;
+}
+
+void MainWindow::on_actionReset_triggered()
+{
+    init();
+    update();
+}
+
+void MainWindow::on_actionPause_triggered()
+{
+    state = 2;
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->close();
+}
+
+void MainWindow::on_Save_clicked()
+{
+    save();
+}
+
+void MainWindow::on_Load_clicked()
+{
+    load();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    save();
+}
+
+void MainWindow::on_actionLoad_triggered()
+{
+    load();
 }

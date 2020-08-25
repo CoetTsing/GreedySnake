@@ -24,11 +24,25 @@ public:
     void go();
     void tailDrop();
     int egg();
+    void save();
+    void load();
 
 private slots:
     void on_Start_clicked();
 
     void on_Reset_clicked();
+
+    void on_Pause_clicked();
+
+    void on_Exit_clicked();
+
+    void on_actionStart_triggered();
+
+    void on_actionReset_triggered();
+
+    void on_actionPause_triggered();
+
+    void on_actionExit_triggered();
 
 private:
     Ui::MainWindow *ui;
