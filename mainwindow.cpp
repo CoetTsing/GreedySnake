@@ -259,7 +259,7 @@ void MainWindow::go() {
     else
         snake.push_front(now + 1);
     if (nodes[*(snake.begin())] == 2) {
-        eating = 3;
+        eating += 3;
         eggExist = false;
         score += 5;
         ui->score->setText(QString::number(score));
