@@ -76,12 +76,6 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             painter.setPen(pen);
             painter.setBrush(brush);
             painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42), 25, 25));
-        } else if (nodes[i] == 1 || nodes[i] == 4) { //蛇身&蛇头
-            QPen pen(QColor(107, 142, 35));
-            QBrush brush(QColor(107, 142, 35));
-            painter.setPen(pen);
-            painter.setBrush(brush);
-            painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42), 25, 25));
         } else if (nodes[i] == 2) { //egg
             QPen pen(QColor(176, 23, 31));
             QBrush brush(QColor(176, 23, 31));
@@ -95,6 +89,56 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             painter.setBrush(brush);
             painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42), 25, 25));
         }
+    }
+    for (auto i: snake) {
+        QPen pen(QColor(107, 142, 35));
+        QBrush brush(QColor(107, 142, 35));
+        painter.setPen(pen);
+        painter.setBrush(brush);
+        painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42), 25, 25));
+    }
+    int i = *(snake.begin());
+    QPen pen(QColor(107, 142, 35));
+    QBrush brush(QColor(107, 142, 35));
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42), 25, 25));
+    QPen pen1(QColor(0, 0, 0));
+    QBrush brush1(QColor(0, 0, 0));
+    QPen pen2(QColor(255, 0, 0));
+    QBrush brush2(QColor(255, 0, 0));
+    if (direction == 1) {
+        painter.setPen(pen1);
+        painter.setBrush(brush1);
+        painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42) + 6, 4, 8));
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 21, 100 + 25 * (i / 42) + 6, 4, 8));
+        painter.setPen(pen2);
+        painter.setBrush(brush2);
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 10, 100 + 25 * (i / 42) - 9, 5, 8));
+    } else if (direction == 2) {
+        painter.setPen(pen1);
+        painter.setBrush(brush1);
+        painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42) + 10, 4, 8));
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 21, 100 + 25 * (i / 42) + 10, 4, 8));
+        painter.setPen(pen2);
+        painter.setBrush(brush2);
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 10, 100 + 25 * (i / 42) + 26, 5, 8));
+    } else if (direction == 3) {
+        painter.setPen(pen1);
+        painter.setBrush(brush1);
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 6, 100 + 25 * (i / 42), 8, 4));
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 6, 100 + 25 * (i / 42) + 21, 8, 4));
+        painter.setPen(pen2);
+        painter.setBrush(brush2);
+        painter.drawRect(QRect(100 + 25 * (i % 42) - 9, 100 + 25 * (i / 42) + 10, 8, 5));
+    } else if (direction == 4) {
+        painter.setPen(pen1);
+        painter.setBrush(brush1);
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 11, 100 + 25 * (i / 42) + 0, 8, 4));
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 11, 100 + 25 * (i / 42) + 21, 8, 4));
+        painter.setPen(pen2);
+        painter.setBrush(brush2);
+        painter.drawRect(QRect(100 + 25 * (i % 42) + 26, 100 + 25 * (i / 42) + 10, 8, 5));
     }
     if (nodes[mouseLocation] == 0) {
         QPen pen(QColor(128, 138, 135));
