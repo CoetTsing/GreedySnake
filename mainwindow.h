@@ -44,6 +44,14 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_Save_clicked();
+
+    void on_Load_clicked();
+
+    void on_actionSave_triggered();
+
+    void on_actionLoad_triggered();
+
 private:
     Ui::MainWindow *ui;
     int nodes[1764];

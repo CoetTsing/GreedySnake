@@ -7,6 +7,14 @@
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QToolBar>
+#include <QFile>
+#include <QFileDialog>
+#include <QIODevice>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QJsonValue>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -40,7 +48,7 @@ void MainWindow::init() {
     step = 0;
     score = 0;
     direction = 4;
-    interval = 200;
+    interval = 150;
     eating = 0;
     eggExist = false;
     mouseLocation = 0;
@@ -88,7 +96,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             painter.drawRect(QRect(100 + 25 * (i % 42), 100 + 25 * (i / 42), 25, 25));
         }
     }
-    if (mouseLocation > 0) {
+    if (nodes[mouseLocation] == 0) {
         QPen pen(QColor(128, 138, 135));
         QBrush brush(QColor(128, 138, 135));
         painter.setPen(pen);
@@ -108,6 +116,49 @@ void MainWindow::timerEvent(QTimerEvent *event) {
             eggExist = true;
         }
         update();
+        ui->Start->setEnabled(false);
+        ui->Reset->setEnabled(false);
+        ui->Pause->setEnabled(true);
+        ui->Save->setEnabled(false);
+        ui->Load->setEnabled(false);
+        ui->actionStart->setEnabled(false);
+        ui->actionReset->setEnabled(false);
+        ui->actionPause->setEnabled(true);
+        ui->actionSave->setEnabled(false);
+        ui->actionLoad->setEnabled(false);
+    } else if (state == 0) {
+        ui->Start->setEnabled(true);
+        ui->Reset->setEnabled(false);
+        ui->Pause->setEnabled(false);
+        ui->Save->setEnabled(false);
+        ui->Load->setEnabled(true);
+        ui->actionStart->setEnabled(true);
+        ui->actionReset->setEnabled(false);
+        ui->actionPause->setEnabled(false);
+        ui->actionSave->setEnabled(false);
+        ui->actionLoad->setEnabled(true);
+    } else if (state == 2) {
+        ui->Start->setEnabled(true);
+        ui->Reset->setEnabled(true);
+        ui->Pause->setEnabled(false);
+        ui->Save->setEnabled(true);
+        ui->Load->setEnabled(false);
+        ui->actionStart->setEnabled(true);
+        ui->actionReset->setEnabled(true);
+        ui->actionPause->setEnabled(false);
+        ui->actionSave->setEnabled(true);
+        ui->actionLoad->setEnabled(false);
+    } else if (state == 3) {
+        ui->Start->setEnabled(false);
+        ui->Reset->setEnabled(true);
+        ui->Pause->setEnabled(false);
+        ui->Save->setEnabled(false);
+        ui->Load->setEnabled(false);
+        ui->actionStart->setEnabled(false);
+        ui->actionReset->setEnabled(true);
+        ui->actionPause->setEnabled(true);
+        ui->actionSave->setEnabled(false);
+        ui->actionLoad->setEnabled(false);
     }
 }
 
@@ -146,7 +197,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             mouseLocation = (x - 125) / 25 + 42 * ((y - 125) / 25 + 1) + 1;
             if (nodes[mouseLocation] == 0)
                 nodes[mouseLocation] = 3;
-            else if (nodes[mouseLocation])
+            else if (nodes[mouseLocation] == 3)
                 nodes[mouseLocation] = 0;
             update();
         }
@@ -195,11 +246,71 @@ int MainWindow::egg() {
 }
 
 void MainWindow::save() {
-
+    QString path = QFileDialog::getSaveFileName(this, "Save", ".", "JSON(*.json)");
+    if (!path.isEmpty()) {
+        QFile file(path);
+        if (file.open(QIODevice::WriteOnly)) {
+            QJsonObject job;
+            job.insert("state", state);
+            job.insert("step", step);
+            job.insert("score", score);
+            job.insert("direction", direction);
+            job.insert("interval", interval);
+            job.insert("eating", eating);
+            job.insert("eggExist", eggExist);
+            job.insert("mousLocation", mouseLocation);
+            QJsonArray jarrNodes;
+            for (int i = 0; i <= 1763; i++)
+                jarrNodes.append(nodes[i]);
+            job.insert("nodes", jarrNodes);
+            QJsonArray jarrSnake;
+            for (auto x: snake)
+                jarrSnake.append(x);
+            job.insert("snake", jarrSnake);
+            QJsonDocument jd;
+            jd.setObject(job);
+            file.write(jd.toJson());
+            file.close();
+        }
+    }
 }
 
 void MainWindow::load() {
-
+    QString path = QFileDialog::getOpenFileName(this, "Open", ".", "JSON(*.json)");
+    if (!path.isEmpty()) {
+        QFile file(path);
+        if (file.open(QIODevice::ReadOnly)) {
+            QByteArray allData = file.readAll();
+            file.close();
+            QJsonParseError json_error;
+            QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
+            if (json_error.error != QJsonParseError::NoError) {
+                QMessageBox::warning(this, "Error", "Json Error!");
+                return;
+            }
+            QJsonObject job = jsonDoc.object();
+            state = job["state"].toInt();
+            step = job["step"].toInt();
+            score = job["score"].toInt();
+            direction = job["direction"].toInt();
+            interval = job["interval"].toInt();
+            eating = job["eating"].toInt();
+            eggExist = job["eggExist"].toBool();
+            mouseLocation = job["mouseLocation"].toInt();
+            QJsonArray jarrNodes = job["nodes"].toArray();
+            for (int i = 0; i <= 1763; i++) {
+                nodes[i] = jarrNodes.at(i).toInt();
+            }
+            QJsonArray jarrSnake = job["snake"].toArray();
+            int l = jarrSnake.size();
+            snake.clear();
+            for (int i = 0; i < l; i++) {
+                snake.push_back(jarrSnake.at(i).toInt());
+            }
+            ui->score->setText(QString::number(score));
+            ui->step->setText(QString::number(step));
+        }
+    }
 }
 
 void MainWindow::on_Start_clicked()
