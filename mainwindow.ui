@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="res.qrc">
-    <normaloff>:/icon/C:/Users/linshu/Pictures/Camera Roll/gs.png</normaloff>:/icon/C:/Users/linshu/Pictures/Camera Roll/gs.png</iconset>
+    <normaloff>:/icon/Icon/gs.png</normaloff>:/icon/Icon/gs.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="step">
