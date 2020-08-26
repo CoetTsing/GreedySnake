@@ -215,33 +215,35 @@ void MainWindow::timeToGo() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-    if (keys.size() != 0) {
-        if (event->key() == Qt::Key_Up) {
-            if (*(keys.end() - 1) != 2)
-                keys.push_back(1);
-        } else if (event->key() == Qt::Key_Down) {
-            if (*(keys.end() - 1) != 1)
-                keys.push_back(2);
-        } else if (event->key() == Qt::Key_Left) {
-            if (*(keys.end() - 1) != 4)
-                keys.push_back(3);
-        } else if (event->key() == Qt::Key_Right) {
+    if (state == 1) {
+        if (keys.size() != 0) {
+            if (event->key() == Qt::Key_Up) {
+                if (*(keys.end() - 1) != 2)
+                    keys.push_back(1);
+            } else if (event->key() == Qt::Key_Down) {
+                if (*(keys.end() - 1) != 1)
+                    keys.push_back(2);
+            } else if (event->key() == Qt::Key_Left) {
+                if (*(keys.end() - 1) != 4)
+                    keys.push_back(3);
+            } else if (event->key() == Qt::Key_Right) {
             if (*(keys.end() - 1) != 3)
-                keys.push_back(4);
-        }
-    } else {
-        if (event->key() == Qt::Key_Up) {
-            if (direction != 2)
-                keys.push_back(1);
-        } else if (event->key() == Qt::Key_Down) {
-            if (direction != 1)
-                keys.push_back(2);
-        } else if (event->key() == Qt::Key_Left) {
-            if (direction != 4)
-                keys.push_back(3);
-        } else if (event->key() == Qt::Key_Right) {
-            if (direction != 3)
-                keys.push_back(4);
+                    keys.push_back(4);
+            }
+        } else {
+            if (event->key() == Qt::Key_Up) {
+                if (direction != 2)
+                    keys.push_back(1);
+            } else if (event->key() == Qt::Key_Down) {
+                if (direction != 1)
+                    keys.push_back(2);
+            } else if (event->key() == Qt::Key_Left) {
+                if (direction != 4)
+                    keys.push_back(3);
+            } else if (event->key() == Qt::Key_Right) {
+                if (direction != 3)
+                    keys.push_back(4);
+            }
         }
     }
 }
