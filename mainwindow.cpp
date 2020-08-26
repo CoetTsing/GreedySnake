@@ -68,13 +68,14 @@ void MainWindow::init() {
     snake.clear();
     snake.push_back(903);
     snake.push_back(902);
+    keys.clear();
 }
 
 void MainWindow::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     for (int i = 0; i <= 1763; i++) {
         if (nodes[i] == 0) { // 平地
-            QPen pen(QColor(250, 240, 230));
+            QPen pen(QColor(230, 220, 210));
             QBrush brush(QColor(250, 240, 230));
             painter.setPen(pen);
             painter.setBrush(brush);
@@ -215,17 +216,17 @@ void MainWindow::timeToGo() {
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Up) {
-        if (direction != 2)
-            direction = 1;
+        if (*(keys.end() - 1) != 2)
+            keys.push_back(1);
     } else if (event->key() == Qt::Key_Down) {
-        if (direction != 1)
-            direction = 2;
+        if (*(keys.end() - 1) != 1)
+            keys.push_back(2);
     } else if (event->key() == Qt::Key_Left) {
-        if (direction != 4)
-            direction = 3;
+        if (*(keys.end() - 1) != 4)
+            keys.push_back(3);
     } else if (event->key() == Qt::Key_Right) {
-        if (direction != 3)
-            direction = 4;
+        if (*(keys.end() - 1) != 3)
+            keys.push_back(4);
     }
 }
 
@@ -256,6 +257,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 }
 
 void MainWindow::go() {
+    if (keys.size() > 0) {
+        direction = *(keys.begin());
+        keys.pop_front();
+    }
     int now = *(snake.begin());
     if (direction == 1)
         snake.push_front(now - 42);
@@ -318,6 +323,10 @@ void MainWindow::save() {
             for (auto x: snake)
                 jarrSnake.append(x);
             job.insert("snake", jarrSnake);
+            QJsonArray jarrKeys;
+            for (auto x: keys)
+                jarrKeys.append(x);
+            job.insert("keys", jarrKeys);
             QJsonDocument jd;
             jd.setObject(job);
             file.write(jd.toJson());
@@ -357,6 +366,12 @@ void MainWindow::load() {
             snake.clear();
             for (int i = 0; i < l; i++) {
                 snake.push_back(jarrSnake.at(i).toInt());
+            }
+            QJsonArray jarrKeys = job["keys"].toArray();
+            l = jarrKeys.size();
+            keys.clear();
+            for (int i = 0; i < l; i++) {
+                keys.push_back(jarrKeys.at(i).toInt());
             }
             timer->setInterval(interval);
             ui->speed->setValue(101 - interval / 7);

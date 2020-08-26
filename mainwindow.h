@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QList>
+#include <QQueue>
 #include <QTimer>
 
 QT_BEGIN_NAMESPACE
@@ -60,6 +61,7 @@ private:
     Ui::MainWindow *ui;
     int nodes[1764];
     QList<int> snake;
+    QQueue<int> keys;
     int state;
     int step;
     int score;
