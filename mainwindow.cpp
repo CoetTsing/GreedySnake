@@ -170,8 +170,7 @@ void MainWindow::timeToGo() {
                 nodes[egg()] = 2;
                 eggExist = true;
             }
-        } else
-            egg();
+        }
         update();
         ui->Start->setEnabled(false);
         ui->Reset->setEnabled(false);
