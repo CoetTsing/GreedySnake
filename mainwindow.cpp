@@ -224,7 +224,7 @@ void MainWindow::timeToGo() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-    if ((event->key() == Qt::Key_Up || event->key() == Qt::Key_Down || event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) && state == 1)
+    if ((event->key() == Qt::Key_Up || event->key() == Qt::Key_Down || event->key() == Qt::Key_Right) && state == 1)
         decided = true;
     if (state == 1) {
         if (keys.size() != 0) {
