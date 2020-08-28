@@ -52,6 +52,7 @@ void MainWindow::init() {
     interval = 200;
     eating = 0;
     eggExist = false;
+    decided = false;
     mouseLocation = 0;
     timer->setInterval(interval);
     ui->speed->setValue(101 - interval / 7);
@@ -156,13 +157,21 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 
 void MainWindow::timeToGo() {
     if (state == 1) {
-        ui->step->setText(QString::number(++step));
-        go();
-        tailDrop();
         if (!eggExist) {
             nodes[egg()] = 2;
             eggExist = true;
+            update();
         }
+        if (decided == true) {
+            ui->step->setText(QString::number(++step));
+            go();
+            tailDrop();
+            if (!eggExist) {
+                nodes[egg()] = 2;
+                eggExist = true;
+            }
+        } else
+            egg();
         update();
         ui->Start->setEnabled(false);
         ui->Reset->setEnabled(false);
@@ -215,6 +224,8 @@ void MainWindow::timeToGo() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if ((event->key() == Qt::Key_Up || event->key() == Qt::Key_Down || event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) && state == 1)
+        decided = true;
     if (state == 1) {
         if (keys.size() != 0) {
             if (event->key() == Qt::Key_Up) {

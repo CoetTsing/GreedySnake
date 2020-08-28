@@ -69,6 +69,7 @@ private:
     int interval;
     int eating;
     bool eggExist;
+    bool decided = true;
     int mouseLocation = 0;
     QTimer *timer = new QTimer(this);
 
