@@ -342,6 +342,7 @@ void MainWindow::save() {
             job.insert("interval", interval);
             job.insert("eating", eating);
             job.insert("eggExist", eggExist);
+            job.insert("decided", decided);
             job.insert("mousLocation", mouseLocation);
             QJsonArray jarrNodes;
             for (int i = 0; i <= 1763; i++)
@@ -384,6 +385,7 @@ void MainWindow::load() {
             interval = job["interval"].toInt();
             eating = job["eating"].toInt();
             eggExist = job["eggExist"].toBool();
+            decided = job["decided"].toBool();
             mouseLocation = job["mouseLocation"].toInt();
             QJsonArray jarrNodes = job["nodes"].toArray();
             for (int i = 0; i <= 1763; i++) {
